@@ -1,0 +1,13 @@
+tranférer des montants
+nouveau thread pour ca  CLient doit connaitre son montant (faudrait stocker les valeurs dans un objet succursale qui ests pas dans le hashmap)
+command line afficher la succursale afficher les autres transférer et faire des erreurs
+
+
+ montant envoie positif integer
+
+ Response client thread écouter pour un transfer
+ crer un objet transfer LE SÉRIALISER transfer à qui de qui montant timestamp montant
+ 1 retire le montnat
+ 2 5 seconde
+ 3 envoie montant
+ penser à l,utilisation de canal

@@ -15,6 +15,7 @@ public class clientConnectionListener implements Runnable {
     }
 
     private Client clientSuccursale;
+
     @Override
     public void run() {
         ServerSocket serverSocket = null;

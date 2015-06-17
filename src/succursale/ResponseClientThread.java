@@ -1,7 +1,7 @@
 package succursale;
 
-import Banque.Succursale;
 import succursale.Transaction.Message;
+import succursale.Transaction.SynchMessage;
 import succursale.Transaction.Transaction;
 
 import java.io.*;
@@ -17,24 +17,28 @@ public class ResponseClientThread implements Runnable{
 
 
     Client clientSuccursale;
-
+    ObjectOutputStream messageSender;
     Socket echoSocket = null;
-    PrintWriter out = null;
-    BufferedReader in = null;
+
+    ObjectInputStream messageReader ;
     public ResponseClientThread(Socket sucursaleSocket,Client clientSuccursale) {
         this.clientSuccursale=clientSuccursale;
         echoSocket = sucursaleSocket;
         try {
-            out = new PrintWriter(echoSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+            messageSender = new ObjectOutputStream(echoSocket.getOutputStream());
+             messageReader = new ObjectInputStream((echoSocket.getInputStream()));
 
-            String inputLine;
+            SynchMessage message=null;
 
-            inputLine = in.readLine();
-                System.out.println("id recu: " + inputLine);
+            try {
+                message = (SynchMessage) messageReader.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            System.out.println("id recu: " + message.getIdSuccursale());
 
 
-              this.clientSuccursale.getListeSuccursale().get(Integer.parseInt(inputLine)).setConnectionThread( this);
+              this.clientSuccursale.getListeSuccursale().get(message.getIdSuccursale()).setConnectionThread(this);
               this.clientSuccursale.printSuccursale();
 
 
@@ -51,8 +55,9 @@ public class ResponseClientThread implements Runnable{
 
         try {
             echoSocket = new Socket(succursaleIPAdresse,portNumber);
-            out = new PrintWriter(echoSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+
+            messageSender = new ObjectOutputStream(echoSocket.getOutputStream());
+            messageReader = new ObjectInputStream(echoSocket.getInputStream());
         } catch (UnknownHostException e) {
             System.err.println("Hote inconnu: " + succursaleIPAdresse);
             System.exit(1);
@@ -60,9 +65,13 @@ public class ResponseClientThread implements Runnable{
             System.err.println("Ne pas se connecter au serveur: " + succursaleIPAdresse);
             System.exit(1);
         }
-        out.println(idSuccursale);
+        try {
+            messageSender.writeObject(new SynchMessage(idSuccursale));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("La succursale vient d'initier une connexion.....");
-        //  BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+        //  BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.messageReader));
 
 
     }
@@ -72,23 +81,23 @@ public class ResponseClientThread implements Runnable{
 
         System.out.println ("connexion reussie");
         System.out.println ("Attente de l'entree.....");
-        ObjectInputStream messagereader=null;
 
-        try {
-            messagereader = new ObjectInputStream(echoSocket.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         Message messageReceived;
         try {
-            while ((messageReceived =(Message)messagereader.readObject() ) != null)
+            while ((messageReceived =(Message)messageReader.readObject() ) != null)
             {
                if(Transaction.class.isInstance(messageReceived)){
-                   //on devrait updater le client avec le nouveau montant recu
+                   Transaction transaction=(Transaction) messageReceived;
+                   System.out.println("New transaction received from "+ transaction.getIdFrom()+"To: "+transaction.getIdTo()+"Montant: "+transaction.getMontant() );
 
 
-               }else{
+                   clientSuccursale.getThisSuccrusale().receiveDeposit(((Transaction) messageReceived).getMontant());
+
+
+               }else{//ici on varépondre à un message de chandi lamport
+                   //clientSuccursale.getTransactionDispatcher().notify();
 
                }
 
@@ -98,6 +107,19 @@ public class ResponseClientThread implements Runnable{
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+    }
+
+
+    public void sendMessage(Message messageTosSend){
+
+        try {
+
+            messageSender.writeObject(messageTosSend);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }

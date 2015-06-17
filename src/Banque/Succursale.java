@@ -3,6 +3,7 @@ package Banque;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URI;
+ import sun.misc.Lock;
 
 /**
  * Created by Gus on 6/4/2015.
@@ -14,6 +15,8 @@ public class Succursale {
     private int montant;
     private String nom;
     private String port;
+    private Lock montantLock=new Lock() {
+    };
 
     public Succursale(InetAddress succursaleIPAdresse, int montant, String nom, String portNumber) {
         this.succursaleIPAdresse = succursaleIPAdresse;
@@ -46,6 +49,10 @@ public class Succursale {
         return montant;
     }
 
+    public void setMontant(int montant) {
+        this.montant = montant;
+    }
+
     public String getNom() {
         return nom;
     }
@@ -53,5 +60,62 @@ public class Succursale {
 
         return id+","+nom+","+montant+","+succursaleIPAdresse.getHostAddress()+","+port;
 
+    }
+
+    public synchronized void receiveDeposit(int depot) {
+
+
+        try {
+            montantLock.lock();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try{
+                montant+=depot;
+
+            }finally {
+
+                montantLock.unlock();
+                System.out.println("Montant total de la succursale est de "+ montant +" "+ depot +"ont été ajouté");
+
+            }
+
+
+
+
+
+    }
+
+
+
+    public synchronized int doWHitdraw(int whitdraw){
+        if(whitdraw<0){
+            whitdraw=whitdraw*-1;
+        }
+
+        try {
+            montantLock.lock();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try{
+            if(montant-whitdraw<0)
+        {
+            return -1;//retourne -1 si le retrait a été impossible
+
+        }else{
+                System.out.println("Montant avant retrait "+montant);
+            montant-=whitdraw;}
+
+        }finally {
+
+            montantLock.unlock();
+            System.out.println("Montant total de la succursale est de "+ montant+" "+whitdraw +" ont été retiré");
+
+        }
+
+
+
+    return whitdraw;
     }
 }

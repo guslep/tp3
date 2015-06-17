@@ -16,4 +16,8 @@ public  abstract class Message  {
     public Message(String type) {
         this.type = type;
     }
+
+    public Message() {
+
+    }
 }
