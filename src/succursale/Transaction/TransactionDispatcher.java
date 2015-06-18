@@ -32,6 +32,7 @@ public class TransactionDispatcher implements Runnable {
         this.transactionIntervalMax = transactionIntervalMax;
     }
 
+    // TODO:  Ajouter une maniere de creer des transactions manuellement
 
 
 

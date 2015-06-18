@@ -1,6 +1,8 @@
 package succursale;
 
 import Banque.Succursale;
+import org.omg.PortableServer.THREAD_POLICY_ID;
+import succursale.Transaction.Menu;
 import succursale.Transaction.TransactionDispatcher;
 
 import java.io.BufferedReader;
@@ -32,6 +34,7 @@ public class Client {
     public Client()throws IOException  {
 
 		String serverHostname;
+//        TODO une fois que ca marche mettre client en singleton et sortir le while immence et le mettre dans un autre thread
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 
 
@@ -75,7 +78,14 @@ public class Client {
 
 
 
+            //TODO Deplacer ce code la dans le BanqueCOnnector
 
+//TODO ajouter le menu ici et l'interaction avec l'usager, idealement creer une classe affichage ce serait pas mal plus clean
+        stdIn.close();
+
+        new Thread(
+                new Menu(this)
+        ).start();
 
 
         System.out.println ("Essai de se connecter a l'hote " +
@@ -106,7 +116,8 @@ public class Client {
 
         System.out.println("Liste des succursales");
         boolean firstRun=true;
-        while(serverHostname!=null){
+        while(serverHostname!=null)
+        {
 
             String recuTest=in.readLine();
             System.out.println(recuTest);
@@ -164,7 +175,7 @@ public class Client {
 
         out.close();
         in.close();
-        stdIn.close();
+
         echoSocket.close();
     }
 
