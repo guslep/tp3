@@ -25,33 +25,18 @@ public class Menu implements Runnable{
             try {
                 String command=stdIn.readLine();
                 if(command.equals("help")){
-
+                    executeHelp();
                 }else{
                     String[] action=command.split(" ");
-                    switch (action[0]){
-                        case "help":{
-                            executeHelp();
-                            break;
-                        }
-                        case "list":{
-                                listSuccursale();
 
-                            break;
-
-                        }
-                        case "amount":{
-                            executeAmount();
-
-                        break;
-                        }
-                        case "transfer":{
-                            executeTransfer(command);
-
-                        break;
-                        }default:{
-                            System.out.println("Error unknown command");
-                            break;
-                        }
+                   if (action[0].equals("list")) {
+                        listSuccursale();
+                    } else if (action[0].equals("amount")) {
+                        executeAmount();
+                    } else if (action[0].equals("transfer")) {
+                        executeTransfer(command);
+                    } else {
+                        System.out.println("Error unknown command");
                     }
 
                 }
@@ -66,16 +51,18 @@ public class Menu implements Runnable{
     }
     private void executeTransfer(String commande){
         String leftTrimM[]=commande.split("--m ");
-        String amount[]=leftTrimM[0].split(" ");
+        String amount[]=leftTrimM[1].split(" ");
         String montantChoisie=amount[0];
         int montantTransfer=Integer.parseInt(montantChoisie);
 
         String leftTrimS[]=commande.split("--s ");
-        String id[]=leftTrimS[0].split(" ");
+        String id[]=leftTrimS[1].split(" ");
         int idSuccursale=Integer.parseInt(id[0]);
         if(montantTransfer>0&&idSuccursale>=0){
 //            TODO ajouter dans client une méthode pour creer une transaction manuelement
 //            TODO ajouter la creation du thread avant le while degeu
+
+            client.getTransactionDispatcher().createManualTransaction(client.getThisSuccrusale().getId(),montantTransfer,idSuccursale);
         }
 
 

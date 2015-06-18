@@ -81,7 +81,7 @@ public class Client {
             //TODO Deplacer ce code la dans le BanqueCOnnector
 
 //TODO ajouter le menu ici et l'interaction avec l'usager, idealement creer une classe affichage ce serait pas mal plus clean
-        stdIn.close();
+        //stdIn.close();
 
         new Thread(
                 new Menu(this)

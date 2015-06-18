@@ -34,6 +34,22 @@ public class TransactionDispatcher implements Runnable {
 
     // TODO:  Ajouter une maniere de creer des transactions manuellement
 
+    public void createManualTransaction(int idFrom,int amount, int idSuccursale){
+         int whitdrew= client.getThisSuccrusale().doWHitdraw(amount);
+
+        if(whitdrew>0) {
+            Transaction transaction = new Transaction(idFrom, idSuccursale, amount);
+            TimerTaskTransaction task=new TimerTaskTransaction(transaction,client);
+            Timer timer=new Timer(true);
+            timer.schedule(task,transactionDelay*1000);
+            System.out.println("Transaction  created manually");
+
+        }
+
+
+
+    }
+
 
 
 
@@ -90,16 +106,20 @@ public class TransactionDispatcher implements Runnable {
             return null;//si il n'y a pas d'autre succursale on ne fait pas de transaction
         }
         Random rand=new Random();
-       int succursaleTotransfer= rand.nextInt()% succursaleNumber+1;
+
+        int valueGenerated=rand.nextInt(Integer.MAX_VALUE);
+        int succursaleTotransfer= (valueGenerated %succursaleNumber)+1;
+        System.out.println("succNBr " + succursaleNumber+" val"+ valueGenerated);
 
         System.out.println("creating new transaction to "+succursaleTotransfer +" in the list" );
 
         Iterator it = listeSuccursale.entrySet().iterator();
         SuccursaleClient succursaleChoisie=null;
         int index=1;
-        while (it.hasNext()||index<=succursaleTotransfer){
+        while (it.hasNext()&&index<=succursaleTotransfer){
+            Map.Entry pair = (Map.Entry)it.next();
             if(index==succursaleTotransfer){
-                Map.Entry pair = (Map.Entry)it.next();
+
                 succursaleChoisie=(SuccursaleClient) pair.getValue();
                 System.out.println("creating new transaction to"+succursaleChoisie.getId() );
                 System.out.println("max amount possible is "+client.getThisSuccrusale().getMontant() );
