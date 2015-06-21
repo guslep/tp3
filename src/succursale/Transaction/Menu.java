@@ -10,10 +10,12 @@ import java.io.InputStreamReader;
  * Created by gus on 6/17/15.
  */
 public class Menu implements Runnable{
-    Client client;
 
-    public Menu(Client client) {
-        this.client = client;
+/*
+Intercept les inputs du client
+ */
+    public Menu() {
+
     }
 
     @Override
@@ -49,6 +51,11 @@ public class Menu implements Runnable{
         }
 
     }
+
+    /**
+     * effectue un transfert manuel
+     * @param commande commande entré manuelle ment pasr l'utulisateur
+     */
     private void executeTransfer(String commande){
         String leftTrimM[]=commande.split("--m ");
         String amount[]=leftTrimM[1].split(" ");
@@ -62,21 +69,32 @@ public class Menu implements Runnable{
 //            TODO ajouter dans client une méthode pour creer une transaction manuelement
 //            TODO ajouter la creation du thread avant le while degeu
 
-            client.getTransactionDispatcher().createManualTransaction(client.getThisSuccrusale().getId(),montantTransfer,idSuccursale);
+            Client.getInstance().getTransactionDispatcher().createManualTransaction(Client.getInstance().getThisSuccrusale().getId(),montantTransfer,idSuccursale);
         }
 
 
 
     }
 
+    /**
+     * Commande amount
+     */
     private  void executeAmount(){
         System.out.println("Montant disponible pour envoyer");
-        System.out.println(client.getThisSuccrusale().getMontant());
+        System.out.println(Client.getInstance().getThisSuccrusale().getMontant());
 
     }
+
+    /**
+     * Commande list
+     *
+     */
     private void listSuccursale(){
-        client.printSuccursale();
+        Client.getInstance().printSuccursale();
     }
+    /**
+    Commande help
+     */
     private void executeHelp(){
         System.out.println("list");
         System.out.println("Affiche la liste des succursales");

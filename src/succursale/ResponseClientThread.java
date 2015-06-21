@@ -16,13 +16,13 @@ public class ResponseClientThread implements Runnable{
 
 
 
-    Client clientSuccursale;
+
     ObjectOutputStream messageSender;
     Socket echoSocket = null;
 
     ObjectInputStream messageReader ;
-    public ResponseClientThread(Socket sucursaleSocket,Client clientSuccursale) {
-        this.clientSuccursale=clientSuccursale;
+    public ResponseClientThread(Socket sucursaleSocket) {
+
         echoSocket = sucursaleSocket;
         try {
             messageSender = new ObjectOutputStream(echoSocket.getOutputStream());
@@ -38,8 +38,8 @@ public class ResponseClientThread implements Runnable{
             System.out.println("id recu: " + message.getIdSuccursale());
 
 
-              this.clientSuccursale.getListeSuccursale().get(message.getIdSuccursale()).setConnectionThread(this);
-              this.clientSuccursale.printSuccursale();
+             Client.getInstance().getListeSuccursale().get(message.getIdSuccursale()).setConnectionThread(this);
+              Client.getInstance().printSuccursale();
 
 
 
@@ -49,8 +49,15 @@ public class ResponseClientThread implements Runnable{
         }
 
     }
-    public ResponseClientThread(InetAddress succursaleIPAdresse,Integer idSuccursale,Integer portNumber,Client clientSuccursale ) {
-        this.clientSuccursale=clientSuccursale;
+
+    /**
+     *
+     * @param succursaleIPAdresse adresse ip ;a qui on ce connecte
+     * @param idSuccursale id de la succursale qu'on contacte
+     * @param portNumber port sur lequel on contacte les succursales
+     */
+    public ResponseClientThread(InetAddress succursaleIPAdresse,Integer idSuccursale,Integer portNumber ) {
+
 
 
         try {
@@ -93,7 +100,7 @@ public class ResponseClientThread implements Runnable{
                    System.out.println("New transaction received from "+ transaction.getIdFrom()+"To: "+transaction.getIdTo()+"Montant: "+transaction.getMontant() );
 
 
-                   clientSuccursale.getThisSuccrusale().receiveDeposit(((Transaction) messageReceived).getMontant());
+                   Client.getInstance().getThisSuccrusale().receiveDeposit(((Transaction) messageReceived).getMontant());
 
 
                }else{//ici on varépondre à un message de chandi lamport
@@ -110,7 +117,10 @@ public class ResponseClientThread implements Runnable{
 
     }
 
-
+    /**
+     * envoie une message à une succursale
+     * @param messageTosSend
+     */
     public void sendMessage(Message messageTosSend){
 
         try {

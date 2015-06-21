@@ -8,6 +8,11 @@ import java.io.Serializable;
 public class SynchMessage extends Message implements Serializable{
     int idSuccursale;
 
+    /**
+     * Message de synchronisation entre les succursales
+     * @param idSuccursale
+     */
+
     public SynchMessage(int idSuccursale) {
         super();
         this.idSuccursale = idSuccursale;

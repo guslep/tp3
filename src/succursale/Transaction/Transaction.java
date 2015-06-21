@@ -14,9 +14,9 @@ public class Transaction extends Message implements Serializable  {
 
     /**
      *
-     * @param idFrom
-     * @param idTo
-     * @param montant
+     * @param idFrom Id de la succursale qui envoie la transaction
+     * @param idTo Id à qui on envoie le message
+     * @param montant montant de la trnasaction
      */
     public Transaction(int idFrom, int idTo, int montant) {
        super("Transaction");

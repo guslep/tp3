@@ -10,11 +10,11 @@ import java.net.Socket;
  * Created by Gus on 6/11/2015.
  */
 public class clientConnectionListener implements Runnable {
-    public clientConnectionListener(Client clientSuccursale) {
-        this.clientSuccursale = clientSuccursale;
+    public clientConnectionListener() {
+
     }
 
-    private Client clientSuccursale;
+
 
     @Override
     public void run() {
@@ -23,7 +23,7 @@ public class clientConnectionListener implements Runnable {
         boolean isRunning = true;
 
         try {
-            serverSocket = new ServerSocket(Integer.parseInt(clientSuccursale.getPortNumber()));
+            serverSocket = new ServerSocket(Integer.parseInt( Client.getInstance().getPortNumber()));
         } catch (IOException e) {
             System.err.println("On ne peut pas ecouter au  port: 10119.");
             System.exit(1);
@@ -44,7 +44,7 @@ public class clientConnectionListener implements Runnable {
 
             //Create a new thread for each connection 1 client = 1 thread
             new Thread(
-                    new ResponseClientThread(succursaleSocket,clientSuccursale)
+                    new ResponseClientThread(succursaleSocket)
 
             ).start();
 
