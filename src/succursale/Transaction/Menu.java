@@ -37,7 +37,13 @@ Intercept les inputs du client
                         executeAmount();
                     } else if (action[0].equals("transfer")) {
                         executeTransfer(command);
-                    } else {
+                    }
+                   else if (action[0].equals("snapshot")) {
+
+                   } else if (action[0].equals("erreur")) {
+
+                   }
+                   else {
                         System.out.println("Error unknown command");
                     }
 
@@ -105,11 +111,5 @@ Intercept les inputs du client
         System.out.println("Paramètre");
         System.out.println("--m montant ");
         System.out.println("--s id de la succursale");
-
-
-
-
-
-
     }
 }

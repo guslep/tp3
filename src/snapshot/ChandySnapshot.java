@@ -25,7 +25,9 @@ public class ChandySnapshot extends Observable{
         snapshotCompleter=false;
         tableauSuccursale=new Succursale[nombreSuccursaleAttendu];
         listeCanal=new HashMap<String,Canal>();
-        id=java.util.UUID.randomUUID();	
+        id=java.util.UUID.randomUUID();
+        envoieDemandeSnapshot();
+
 	}
 	
 	public int getMontantBanque() {
@@ -69,7 +71,7 @@ public class ChandySnapshot extends Observable{
     }
 
     private void envoieDemandeSnapshot(){
-
+        addThisSuccursaleSnapshot(ActiveSuccursale.getInstance().getThisSuccrusale());
         Message snapshotRequest=new messageRequestChandy("Snapshot Request",this.id.toString());
       HashMap listeSuccursale= ActiveSuccursale.getInstance().getListeSuccursale();
         Iterator iterateurSuccursale=listeSuccursale.entrySet().iterator();
@@ -77,7 +79,7 @@ public class ChandySnapshot extends Observable{
             Map.Entry pair = (Map.Entry) iterateurSuccursale.next();
             SuccursaleClient succursale=(SuccursaleClient)pair.getValue();
             succursale.getConnectionThread().sendMessage(snapshotRequest);
-            addThisSuccursaleSnapshot(ActiveSuccursale.getInstance().getThisSuccrusale());
+
 
         }
     }
@@ -157,14 +159,17 @@ public class ChandySnapshot extends Observable{
     	while (canauxIterator.hasNext()){
     		Map.Entry pair = (Map.Entry) canauxIterator.next();
     		System.out.print("Canal S" + pair.getKey().toString());
-    		System.out.println(": " + pair.getValue() + "$");
+    		System.out.println(": " + ((Canal)pair.getValue()).getMontant() + "$");
     		
-    		montantTotalSnapshot += (int)pair.getValue();
+    		montantTotalSnapshot += ((Canal)pair.getValue()).getMontant();
     	}
     	if (montantTotalSnapshot == this.montantBanque){
-    		System.out.println("ÉTAT GLOBAL COHÉRENT");
+    		System.out.println("ï¿½TAT GLOBAL COHï¿½RENT");
     	} else{
-    		System.out.println("ÉTAT GLOBAL INCOHÉRENT");
+    		System.out.println("ï¿½TAT GLOBAL INCOHï¿½RENT");
     	}
+
+        System.out.println(this.montantBanque);
+        System.out.println(montantTotalSnapshot);
     }
 }

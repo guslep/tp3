@@ -112,7 +112,11 @@ public class ResponseClientThread implements Runnable{
                    sendMessage(response);
 
                }else if(messageResponseChandy.class.isInstance(messageReceived)){
-                   ActiveSuccursale.getInstance().getChandyManager();
+                   messageResponseChandy response=(messageResponseChandy)messageReceived;
+                   ActiveSuccursale.getInstance().getChandyManager().dispatchChandyResponse(response);
+
+
+               }else{
 
                }
 

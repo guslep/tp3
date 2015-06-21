@@ -35,6 +35,7 @@ public class ChandyManager implements Observer {
 		ChandySnapshot snapshot= new ChandySnapshot();
         snapshot.addObserver(this);
         iHashSnapShot.put(snapshot.getId().toString(),snapshot);
+
 	}
 	
 	public void removeSnapShot(String uuidSnapShot){
@@ -43,7 +44,7 @@ public class ChandyManager implements Observer {
 
     public void dispatchChandyResponse(messageResponseChandy response){
 
-        iHashSnapShot.get(response.getIdSnapshot());
+        iHashSnapShot.get(response.getIdSnapshot()).manageResponse(response);
 
 
     }
@@ -52,6 +53,6 @@ public class ChandyManager implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         String uuid=(String) arg;
-        iHashSnapShot.remove(uuid);
+      //  iHashSnapShot.remove(uuid);
     }
 }

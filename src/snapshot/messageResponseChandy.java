@@ -1,6 +1,7 @@
 package snapshot;
 
 import java.awt.List;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -8,7 +9,7 @@ import Banque.Succursale;
 import succursale.ActiveSuccursale;
 import succursale.Transaction.Message;
 
-public class messageResponseChandy extends Message {
+public class messageResponseChandy extends Message implements Serializable{
 
 	private String idSnapshot;
 
@@ -28,7 +29,7 @@ public class messageResponseChandy extends Message {
         idSuccursale=thisSuccursale.getId();
         montant=thisSuccursale.getMontant();
         transactionEnAttente= ActiveSuccursale.getInstance().getTransactionDispatcher().getMapTransaction();
-        succrusale=new Succursale(null,montant,thisSuccursale.getNom(),null);
+        succrusale=new Succursale(null,montant,thisSuccursale.getNom(),thisSuccursale.getPort());
         succrusale.setId(idSuccursale);
 
 

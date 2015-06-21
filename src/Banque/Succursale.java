@@ -1,5 +1,7 @@
 package Banque;
 
+import java.beans.Transient;
+import java.io.Serializable;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URI;
@@ -8,14 +10,16 @@ import java.net.URI;
 /**
  * Created by Gus on 6/4/2015.
  */
-public class Succursale {
+public class Succursale implements Serializable {
 
     private int id;
-    private InetAddress succursaleIPAdresse;
+
+    private transient   InetAddress succursaleIPAdresse;
     private int montant;
     private String nom;
     private String port;
-    private Lock montantLock=new Lock() {
+
+    private transient Lock montantLock=new Lock() {
     };
 
     public Succursale(InetAddress succursaleIPAdresse, int montant, String nom, String portNumber) {

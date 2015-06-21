@@ -75,8 +75,10 @@ public class banqueListner implements Runnable{
             }
             System.out.println(recuTest);
             String recu[]=recuTest.split(";");
+            int banuqeMontant=Integer.parseInt(recu[0]);
+            ActiveSuccursale.getInstance().setMontantBanque(banuqeMontant);
             listeSuccursale= ActiveSuccursale.getInstance().getListeSuccursale();
-            for(int index=0;index<recu.length;index++){
+            for(int index=1;index<recu.length;index++){
                 String[] splitSuccursale=recu[index].split(",");
 
                 if(!listeSuccursale.containsKey(Integer.parseInt(splitSuccursale[0]))){

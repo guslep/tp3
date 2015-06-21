@@ -33,8 +33,8 @@ public class Banque {
 
                  System.out.println(succursale.getNom()+" "+" a ajouté "+succursale.getMontant());
                  System.out.println("Montant total de la banque est de "+ totalMoneyInThaBank);
+                 pushToClient(totalMoneyInThaBank+";"+printSucursale());
                  montantLock.unlock();
-                 pushToClient(printSucursale());
 
              }
          } catch (InterruptedException e) {

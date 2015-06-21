@@ -110,8 +110,11 @@ public class ActiveSuccursale {
         return montantBanque;
     }
 
+    public void setMontantBanque(int montantBanque) {
+        this.montantBanque = montantBanque;
+    }
 
-//TODO retirer les system.out et les envoyer dans les logs à la places
+    //TODO retirer les system.out et les envoyer dans les logs à la places
 
 //TODO banque envoie sont montant lorsqu'une nouvelle sucursale join
     //TODO ajouter les erreurs aka perte d'argent

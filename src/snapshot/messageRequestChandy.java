@@ -1,10 +1,11 @@
 package snapshot;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import succursale.Transaction.Message;
 
-public class messageRequestChandy extends Message{
+public class messageRequestChandy extends Message implements Serializable{
 
 	private String idSnapshot;
 

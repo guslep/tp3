@@ -223,7 +223,7 @@ public class TransactionDispatcher implements Runnable {
          */
         @Override
         public void run() {
-            System.out.println("tasked wakeup");
+         //   System.out.println("tasked wakeup");
             SuccursaleClient succursaleTotransfer= ActiveSuccursale.getInstance().getListeSuccursale().get(transactionTocomplete.getIdTo());
             succursaleTotransfer.getConnectionThread().sendMessage(transactionTocomplete);
             mapTransaction.remove(transactionTocomplete.getUUID());
