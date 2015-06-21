@@ -9,7 +9,7 @@ import succursale.SuccursaleClient;
 import succursale.Transaction.Message;
 import succursale.Transaction.Transaction;
 
-public class ChandySnapshot {
+public class ChandySnapshot extends Observable{
 
 	private int montantBanque;
 	private int nombreSuccursaleAttendu;
@@ -139,6 +139,25 @@ public class ChandySnapshot {
 
         tableauSuccursale[response.getSuccrusale().getId()]=response.getSuccrusale();
         creerCanaux(response.getTransactionEnAttente());
+        int index=1;
+        boolean snapshotFinished=true;
+        while(index<tableauSuccursale.length){
+            if(tableauSuccursale[index]==null)
+            {index=tableauSuccursale.length;
+                snapshotFinished=false;
+            }
+            index++;
+        }
+        if(snapshotFinished){
+
+            showSnapshotResult();
+            notifyObservers(this.getId());
+
+        }
+
+    }
+
+    private void showSnapshotResult(){
 
 
     }

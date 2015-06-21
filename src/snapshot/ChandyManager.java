@@ -1,8 +1,10 @@
 package snapshot;
 
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
-public class ChandyManager {
+public class ChandyManager implements Observer {
 
 	private HashMap<String,ChandySnapshot>  iHashSnapShot=new HashMap<String, ChandySnapshot>();
 
@@ -31,6 +33,7 @@ public class ChandyManager {
 	
 	public void creerSnapShot(){
 		ChandySnapshot snapshot= new ChandySnapshot();
+        snapshot.addObserver(this);
         iHashSnapShot.put(snapshot.getId().toString(),snapshot);
 	}
 	
@@ -41,6 +44,14 @@ public class ChandyManager {
     public void dispatchChandyResponse(messageResponseChandy response){
 
         iHashSnapShot.get(response.getIdSnapshot());
+
+
     }
 
+
+    @Override
+    public void update(Observable o, Object arg) {
+        String uuid=(String) arg;
+        iHashSnapShot.remove(uuid);
+    }
 }
