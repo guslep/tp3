@@ -20,21 +20,13 @@ public class ChandySnapshot extends Observable{
 	
 	public ChandySnapshot(){
 
-
-
-
-         montantBanque= ActiveSuccursale.getInstance().getMontantBanque();
+        montantBanque= ActiveSuccursale.getInstance().getMontantBanque();
         nombreSuccursaleAttendu=ActiveSuccursale.getInstance().getListeSuccursale().size()+2;
         snapshotCompleter=false;
         tableauSuccursale=new Succursale[nombreSuccursaleAttendu];
         listeCanal=new HashMap<String,Canal>();
-        id=java.util.UUID.randomUUID();
-
-		
+        id=java.util.UUID.randomUUID();	
 	}
-
-
-
 	
 	public int getMontantBanque() {
 		return montantBanque;
@@ -51,8 +43,6 @@ public class ChandySnapshot extends Observable{
 	public void setNombreSuccursaleAttendu(int nombreSuccursaleAttendu) {
 		this.nombreSuccursaleAttendu = nombreSuccursaleAttendu;
 	}
-
-
 
 	public boolean isSnapshotCompleter() {
 		return snapshotCompleter;
@@ -90,8 +80,6 @@ public class ChandySnapshot extends Observable{
             addThisSuccursaleSnapshot(ActiveSuccursale.getInstance().getThisSuccrusale());
 
         }
-
-
     }
 
     private void addThisSuccursaleSnapshot(Succursale succursale){
@@ -105,9 +93,6 @@ public class ChandySnapshot extends Observable{
 
 
     private void creerCanaux( HashMap mapPendingTransaction){
-
-
-
 
         Iterator mapPIterator =mapPendingTransaction.entrySet().iterator();
         while (mapPIterator.hasNext()) {
@@ -128,8 +113,7 @@ public class ChandySnapshot extends Observable{
 
         }
 
-
-        }
+    }
 
 
 
@@ -152,13 +136,35 @@ public class ChandySnapshot extends Observable{
 
             showSnapshotResult();
             notifyObservers(this.getId());
-
         }
 
     }
 
     private void showSnapshotResult(){
-
-
+    	Iterator canauxIterator = this.listeCanal.entrySet().iterator();
+    	int montantTotalSnapshot = 0;
+    	
+    	System.out.println("Succursale d'origine de la capture: #" + 
+    			ActiveSuccursale.getInstance().getThisSuccrusale().getId());
+    	
+    	for (int i=1; i<this.tableauSuccursale.length; i++){
+    		System.out.println("Succursale #" + i + ": " + 
+    				tableauSuccursale[i].getMontant() + "$");
+    		
+    		montantTotalSnapshot += tableauSuccursale[i].getMontant();
+    	}
+    	
+    	while (canauxIterator.hasNext()){
+    		Map.Entry pair = (Map.Entry) canauxIterator.next();
+    		System.out.print("Canal S" + pair.getKey().toString());
+    		System.out.println(": " + pair.getValue() + "$");
+    		
+    		montantTotalSnapshot += (int)pair.getValue();
+    	}
+    	if (montantTotalSnapshot == this.montantBanque){
+    		System.out.println("ÉTAT GLOBAL COHÉRENT");
+    	} else{
+    		System.out.println("ÉTAT GLOBAL INCOHÉRENT");
+    	}
     }
 }
