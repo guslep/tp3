@@ -1,29 +1,40 @@
 package snapshot;
 
 import java.awt.List;
+import java.util.HashMap;
 import java.util.UUID;
 
+import Banque.Succursale;
+import succursale.ActiveSuccursale;
 import succursale.Transaction.Message;
 
 public class messageResponseChandy extends Message {
 
 	private String idSnapshot;
-	private int idSuccursale;
-	private int montant;
-	private List transactionEnAttente = new List();
-	
-	public messageResponseChandy(){
-		transactionEnAttente = new List();
-	}
-	
-	public messageResponseChandy(int idSuccursale, int montant){
-		this.idSnapshot = UUID.randomUUID().toString();
-		this.idSuccursale = idSuccursale;
-		this.montant = montant;
-		transactionEnAttente.add(idSnapshot);
-	}
 
-	public String getIdSnapshot() {
+    private Succursale succrusale;
+	private HashMap transactionEnAttente ;
+	
+
+	
+
+
+    public messageResponseChandy(String idSnapshot) {
+        super("Snapshot Response");
+        this.idSnapshot = idSnapshot;
+        Succursale thisSuccursale=ActiveSuccursale.getInstance().getThisSuccrusale();
+         int idSuccursale;
+         int montant;
+        idSuccursale=thisSuccursale.getId();
+        montant=thisSuccursale.getMontant();
+        transactionEnAttente= ActiveSuccursale.getInstance().getTransactionDispatcher().getMapTransaction();
+        succrusale=new Succursale(null,montant,thisSuccursale.getNom(),null);
+        succrusale.setId(idSuccursale);
+
+
+    }
+
+    public String getIdSnapshot() {
 		return idSnapshot;
 	}
 
@@ -31,27 +42,11 @@ public class messageResponseChandy extends Message {
 		this.idSnapshot = idSnapshot;
 	}
 
-	public int getIdSuccursale() {
-		return idSuccursale;
-	}
+    public Succursale getSuccrusale() {
+        return succrusale;
+    }
 
-	public void setIdSuccursale(int idSuccursale) {
-		this.idSuccursale = idSuccursale;
-	}
-
-	public int getMontant() {
-		return montant;
-	}
-
-	public void setMontant(int montant) {
-		this.montant = montant;
-	}
-
-	public List getTransactionEnAttente() {
-		return transactionEnAttente;
-	}
-
-	public void setTransactionEnAttente(List transactionEnAttente) {
-		this.transactionEnAttente = transactionEnAttente;
-	}
+    public HashMap getTransactionEnAttente() {
+        return transactionEnAttente;
+    }
 }

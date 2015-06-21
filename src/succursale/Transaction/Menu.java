@@ -1,6 +1,6 @@
 package succursale.Transaction;
 
-import succursale.Client;
+import succursale.ActiveSuccursale;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -69,7 +69,7 @@ Intercept les inputs du client
 //            TODO ajouter dans client une méthode pour creer une transaction manuelement
 //            TODO ajouter la creation du thread avant le while degeu
 
-            Client.getInstance().getTransactionDispatcher().createManualTransaction(Client.getInstance().getThisSuccrusale().getId(),montantTransfer,idSuccursale);
+            ActiveSuccursale.getInstance().getTransactionDispatcher().createManualTransaction(ActiveSuccursale.getInstance().getThisSuccrusale().getId(),montantTransfer,idSuccursale);
         }
 
 
@@ -81,7 +81,7 @@ Intercept les inputs du client
      */
     private  void executeAmount(){
         System.out.println("Montant disponible pour envoyer");
-        System.out.println(Client.getInstance().getThisSuccrusale().getMontant());
+        System.out.println(ActiveSuccursale.getInstance().getThisSuccrusale().getMontant());
 
     }
 
@@ -90,7 +90,7 @@ Intercept les inputs du client
      *
      */
     private void listSuccursale(){
-        Client.getInstance().printSuccursale();
+        ActiveSuccursale.getInstance().printSuccursale();
     }
     /**
     Commande help

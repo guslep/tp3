@@ -1,5 +1,6 @@
 package succursale;
 
+import snapshot.ChandyManager;
 import succursale.Transaction.Menu;
 
 import java.io.BufferedReader;
@@ -57,7 +58,7 @@ import java.util.Random;
             montant=Integer.parseInt(strMontant);
         }
 
-        Client.getInstance().setPortNumber(portNumber);
+        ActiveSuccursale.getInstance().setPortNumber(portNumber);
 
         new Thread(
                 new banqueListner(serverHostname,montant,succursaleName,portNumber)
@@ -76,6 +77,8 @@ import java.util.Random;
         new Thread(
                 new Menu()
         ).start();
+
+
 
 
 

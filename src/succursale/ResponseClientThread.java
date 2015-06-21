@@ -1,5 +1,7 @@
 package succursale;
 
+import snapshot.messageRequestChandy;
+import snapshot.messageResponseChandy;
 import succursale.Transaction.Message;
 import succursale.Transaction.SynchMessage;
 import succursale.Transaction.Transaction;
@@ -38,8 +40,8 @@ public class ResponseClientThread implements Runnable{
             System.out.println("id recu: " + message.getIdSuccursale());
 
 
-             Client.getInstance().getListeSuccursale().get(message.getIdSuccursale()).setConnectionThread(this);
-              Client.getInstance().printSuccursale();
+             ActiveSuccursale.getInstance().getListeSuccursale().get(message.getIdSuccursale()).setConnectionThread(this);
+              ActiveSuccursale.getInstance().printSuccursale();
 
 
 
@@ -100,13 +102,20 @@ public class ResponseClientThread implements Runnable{
                    System.out.println("New transaction received from "+ transaction.getIdFrom()+"To: "+transaction.getIdTo()+"Montant: "+transaction.getMontant() );
 
 
-                   Client.getInstance().getThisSuccrusale().receiveDeposit(((Transaction) messageReceived).getMontant());
+                   ActiveSuccursale.getInstance().getThisSuccrusale().receiveDeposit(((Transaction) messageReceived).getMontant());
 
 
-               }else{//ici on varépondre à un message de chandi lamport
+               }else if(messageRequestChandy.class.isInstance(messageReceived)){//ici on varépondre à un message de chandi lamport
                    //clientSuccursale.getTransactionDispatcher().notify();
+                   messageRequestChandy received=(messageRequestChandy) messageReceived;
+                   messageResponseChandy response=new messageResponseChandy(received.getIdSnapShot());
+                   sendMessage(response);
+
+               }else if(messageResponseChandy.class.isInstance(messageReceived)){
+                   ActiveSuccursale.getInstance().getChandyManager();
 
                }
+
 
             }
         } catch (IOException e) {

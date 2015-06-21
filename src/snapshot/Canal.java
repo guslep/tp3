@@ -11,6 +11,11 @@ public class Canal {
 		this.recepteur = r;
 		this.montant = m;
 	}
+    public Canal (Integer e, Integer r, int m) {
+        this.emetteur = Integer.toString(e);
+        this.recepteur = Integer.toString(r);
+        this.montant = m;
+    }
 	
 	public String getEmetteur(){
 		return this.emetteur;
@@ -41,8 +46,8 @@ public class Canal {
 	}
 	
 	public String toString(){
-		String messageCanal = "Le canal entre l'émetteur " +
-		this.emetteur + " et le récepteur " + this.recepteur +
+		String messageCanal = "Le canal entre l'ï¿½metteur " +
+		this.emetteur + " et le rï¿½cepteur " + this.recepteur +
 		" contient " + this.montant + "$";
 		return messageCanal;
 	}

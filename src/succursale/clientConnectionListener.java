@@ -1,7 +1,5 @@
 package succursale;
 
-import Banque.ResponseServerThread;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,7 +21,7 @@ public class clientConnectionListener implements Runnable {
         boolean isRunning = true;
 
         try {
-            serverSocket = new ServerSocket(Integer.parseInt( Client.getInstance().getPortNumber()));
+            serverSocket = new ServerSocket(Integer.parseInt( ActiveSuccursale.getInstance().getPortNumber()));
         } catch (IOException e) {
             System.err.println("On ne peut pas ecouter au  port: 10119.");
             System.exit(1);

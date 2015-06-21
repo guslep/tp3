@@ -1,6 +1,6 @@
 package succursale.Transaction;
 
-import succursale.Client;
+import succursale.ActiveSuccursale;
 import succursale.SuccursaleClient;
 
 import java.util.*;
@@ -63,7 +63,7 @@ public class TransactionDispatcher implements Runnable {
      * @param idSuccursale id de la succcursale à qui on envoie
      */
     public void createManualTransaction(int idFrom,int amount, int idSuccursale){
-         int whitdrew= Client.getInstance().getThisSuccrusale().doWHitdraw(amount);
+         int whitdrew= ActiveSuccursale.getInstance().getThisSuccrusale().doWHitdraw(amount);
 
         if(whitdrew>0) {
             Transaction transaction = new Transaction(idFrom, idSuccursale, amount);
@@ -131,7 +131,7 @@ public class TransactionDispatcher implements Runnable {
      * @return
      */
     private Transaction createNewRandomTransaction(){
-       HashMap listeSuccursale=Client.getInstance().getListeSuccursale();
+       HashMap listeSuccursale= ActiveSuccursale.getInstance().getListeSuccursale();
         int succursaleNumber=listeSuccursale.size();
         if(succursaleNumber==0){
             return null;//si il n'y a pas d'autre succursale on ne fait pas de transaction
@@ -153,7 +153,7 @@ public class TransactionDispatcher implements Runnable {
 
                 succursaleChoisie=(SuccursaleClient) pair.getValue();
                 System.out.println("creating new transaction to"+succursaleChoisie.getId() );
-                System.out.println("max amount possible is "+Client.getInstance().getThisSuccrusale().getMontant() );
+                System.out.println("max amount possible is "+ ActiveSuccursale.getInstance().getThisSuccrusale().getMontant() );
 
             }
             index++;
@@ -163,7 +163,7 @@ public class TransactionDispatcher implements Runnable {
         int montantTransfer= whitdrawRandomAmount();
         if(montantTransfer!=-1&&succursaleChoisie!=null){
 
-            transaction=new Transaction(Client.getInstance().getThisSuccrusale().getId(),succursaleChoisie.getId(),montantTransfer);
+            transaction=new Transaction(ActiveSuccursale.getInstance().getThisSuccrusale().getId(),succursaleChoisie.getId(),montantTransfer);
             mapTransaction.put(transaction.getUUID(),transaction);
 
         }
@@ -185,7 +185,7 @@ public class TransactionDispatcher implements Runnable {
     private int whitdrawRandomAmount(){
         int amountTransfer=0;
 
-       int maxMontant= Client.getInstance().getThisSuccrusale().getMontant();
+       int maxMontant= ActiveSuccursale.getInstance().getThisSuccrusale().getMontant();
         if(maxMontant==0){
             return -1;///si il y a pas d'argent on arrête
         }
@@ -193,7 +193,7 @@ public class TransactionDispatcher implements Runnable {
 
         int amountWhitdrew=0;
         do {
-            amountWhitdrew=Client.getInstance().getThisSuccrusale().doWHitdraw(rand.nextInt()%maxMontant+1);
+            amountWhitdrew= ActiveSuccursale.getInstance().getThisSuccrusale().doWHitdraw(rand.nextInt()%maxMontant+1);
         }
         while (amountWhitdrew==-1);
 
@@ -224,7 +224,7 @@ public class TransactionDispatcher implements Runnable {
         @Override
         public void run() {
             System.out.println("tasked wakeup");
-            SuccursaleClient succursaleTotransfer=Client.getInstance().getListeSuccursale().get(transactionTocomplete.getIdTo());
+            SuccursaleClient succursaleTotransfer= ActiveSuccursale.getInstance().getListeSuccursale().get(transactionTocomplete.getIdTo());
             succursaleTotransfer.getConnectionThread().sendMessage(transactionTocomplete);
             mapTransaction.remove(transactionTocomplete.getUUID());
 
@@ -232,5 +232,7 @@ public class TransactionDispatcher implements Runnable {
 
     }
 
-
+    public HashMap<UUID, Transaction> getMapTransaction() {
+        return mapTransaction;
+    }
 }

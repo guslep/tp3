@@ -75,7 +75,7 @@ public class banqueListner implements Runnable{
             }
             System.out.println(recuTest);
             String recu[]=recuTest.split(";");
-            listeSuccursale=Client.getInstance().getListeSuccursale();
+            listeSuccursale= ActiveSuccursale.getInstance().getListeSuccursale();
             for(int index=0;index<recu.length;index++){
                 String[] splitSuccursale=recu[index].split(",");
 
@@ -90,7 +90,7 @@ public class banqueListner implements Runnable{
                             e.printStackTrace();
                         }
                         thisSuccrusale.setId(Integer.parseInt(splitSuccursale[0]));
-                        Client.getInstance().setThisSuccrusale(thisSuccrusale);
+                        ActiveSuccursale.getInstance().setThisSuccrusale(thisSuccrusale);
 
                     }
                     else{
@@ -111,9 +111,9 @@ public class banqueListner implements Runnable{
 
 
             }
-            Client.getInstance().setListeSuccursale(listeSuccursale);
+            ActiveSuccursale.getInstance().setListeSuccursale(listeSuccursale);
 
-            Client.getInstance().printSuccursale();
+            ActiveSuccursale.getInstance().printSuccursale();
             if(firstRun){
                 System.out.println("Creating Connection");
 
@@ -126,7 +126,7 @@ public class banqueListner implements Runnable{
                 System.out.println("Starting transactionDispatcher");
 
                 TransactionDispatcher transactionDispatcher =new TransactionDispatcher();
-                Client.getInstance().setTransactionDispatcher(transactionDispatcher);
+                ActiveSuccursale.getInstance().setTransactionDispatcher(transactionDispatcher);
                 new Thread(
                         transactionDispatcher
                 ).start();
@@ -162,7 +162,7 @@ public class banqueListner implements Runnable{
             {
 
 
-                    Succursale thisSuccrusale=Client.getInstance().getThisSuccrusale();
+                    Succursale thisSuccrusale= ActiveSuccursale.getInstance().getThisSuccrusale();
                 ResponseClientThread newConnectionThread = new ResponseClientThread(currentClient.getSuccursaleIPAdresse(), thisSuccrusale.getId(),Integer.parseInt(currentClient.getPort()));
 
                 currentClient.setConnectionThread(newConnectionThread);
