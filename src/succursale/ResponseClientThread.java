@@ -10,6 +10,8 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -113,13 +115,31 @@ public class ResponseClientThread implements Runnable{
 
                    messageRequestChandy received=(messageRequestChandy) messageReceived;
                    messageResponseChandy response=new messageResponseChandy(received.getIdSnapShot());
-                   System.out.println(response.getTransactionEnAttente().size() +" transaction avant 20 secondes de delai");
-                TimerTaskSend timerTask=new TimerTaskSend(response);
+                   System.out.println(response.getTransactionEnAttente().size() +" transaction avant 20 secondes de delai "+response.getSuccrusale().getMontant());
+                   Iterator mapPIterator =response.getTransactionEnAttente().entrySet().iterator();
+
+
+
+                   while (mapPIterator.hasNext()) {
+
+                       Map.Entry pair = (Map.Entry) mapPIterator.next();
+                       Transaction currentTransaction = (Transaction) pair.getValue();
+
+                       System.out.println("Transaction in  canal de  " +currentTransaction.getMontant());
+
+
+
+
+                   }
+
+
+                   TimerTaskSend timerTask=new TimerTaskSend(response);
                    Timer timer=new Timer();
-                   timer.schedule(timerTask,200*1000);
+                  timer.schedule(timerTask,20*1000);
+                  // sendMessage(response);
 
 
-                   sendMessage(response);
+
 
                }else if(messageResponseChandy.class.isInstance(messageReceived)){
                    messageResponseChandy response=(messageResponseChandy)messageReceived;
@@ -173,8 +193,28 @@ public class ResponseClientThread implements Runnable{
          */
         @Override
         public void run() {
-            //   System.out.println("tasked wakeup");
-         sendMessage(chandyMessage);
+            messageResponseChandy test=(messageResponseChandy )chandyMessage;
+
+            Iterator mapPIterator =test.getTransactionEnAttente().entrySet().iterator();
+
+
+
+            while (mapPIterator.hasNext()) {
+
+                Map.Entry pair = (Map.Entry) mapPIterator.next();
+                Transaction currentTransaction = (Transaction) pair.getValue();
+
+                System.out.println("Transaction in  canal de  " +currentTransaction.getMontant());
+
+
+
+
+            }
+
+            System.out.println("Sending response "+(test.getSuccrusale().getMontant()+" size "+test.getTransactionEnAttente().size()));
+
+
+            sendMessage(chandyMessage);
 
         }
 
