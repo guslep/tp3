@@ -1,16 +1,28 @@
 package snapshot;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class LogManager {
 
-	private static String logPath;
 	private BufferedWriter out; 
+	private static LogManager instance = null;
+	private static final String logPath = "logChandyLamport.txt";
 	
-	public LogManager (String logPath){
-		this.logPath = logPath;
+	protected LogManager (){
+		File fileTemp = new File(logPath);
+		if (fileTemp.exists()){
+			fileTemp.delete();
+		}
+	}
+	
+	public static LogManager getInstance(){
+		if (instance == null){
+			instance = new LogManager();
+		}
+		return instance;
 	}
 	
 	public void writeLogLine (String logMessage){
