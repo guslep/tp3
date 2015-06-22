@@ -35,6 +35,7 @@ public class ChandyManager implements Observer {
 		ChandySnapshot snapshot= new ChandySnapshot();
         snapshot.addObserver(this);
         iHashSnapShot.put(snapshot.getId().toString(),snapshot);
+        System.out.println("new snapshot "+ snapshot.getId());
 
 	}
 	
@@ -44,7 +45,18 @@ public class ChandyManager implements Observer {
 
     public void dispatchChandyResponse(messageResponseChandy response){
 
-        iHashSnapShot.get(response.getIdSnapshot()).manageResponse(response);
+
+
+        if(iHashSnapShot.get(response.getIdSnapshot())!=null){
+
+            iHashSnapShot.get(response.getIdSnapshot()).manageResponse(response);
+            System.out.println("Good dispatch respons "+response.getIdSnapshot());
+
+        }
+        else{
+
+            System.out.println("Error "+response.getIdSnapshot());
+        }
 
 
     }

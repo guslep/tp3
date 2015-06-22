@@ -10,6 +10,8 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Gus on 6/11/2015.
@@ -107,8 +109,16 @@ public class ResponseClientThread implements Runnable{
 
                }else if(messageRequestChandy.class.isInstance(messageReceived)){//ici on varépondre à un message de chandi lamport
                    //clientSuccursale.getTransactionDispatcher().notify();
+
+
                    messageRequestChandy received=(messageRequestChandy) messageReceived;
                    messageResponseChandy response=new messageResponseChandy(received.getIdSnapShot());
+                   System.out.println(response.getTransactionEnAttente().size() +" transaction avant 20 secondes de delai");
+                TimerTaskSend timerTask=new TimerTaskSend(response);
+                   Timer timer=new Timer();
+                   timer.schedule(timerTask,200*1000);
+
+
                    sendMessage(response);
 
                }else if(messageResponseChandy.class.isInstance(messageReceived)){
@@ -143,6 +153,30 @@ public class ResponseClientThread implements Runnable{
             e.printStackTrace();
         }
 
+
+    }
+
+
+    private class TimerTaskSend extends TimerTask {
+
+        Message chandyMessage;
+
+
+        private TimerTaskSend( Message chandyMessage) {
+
+            this.chandyMessage = chandyMessage;
+
+        }
+
+        /**
+         * Lorsuqe le delai est passé
+         */
+        @Override
+        public void run() {
+            //   System.out.println("tasked wakeup");
+         sendMessage(chandyMessage);
+
+        }
 
     }
 }

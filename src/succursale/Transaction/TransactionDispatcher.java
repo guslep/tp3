@@ -1,5 +1,6 @@
 package succursale.Transaction;
 
+import snapshot.Canal;
 import succursale.ActiveSuccursale;
 import succursale.SuccursaleClient;
 
@@ -10,9 +11,9 @@ import java.util.*;
  */
 public class TransactionDispatcher implements Runnable {
 
-    private int transactionDelay=5;
-    private int transactionIntervalMin =5;
-    private int transactionIntervalMax =10;
+    private int transactionDelay=10;
+    private int transactionIntervalMin =10;
+    private int transactionIntervalMax =15;
 
     /**
      *
@@ -94,7 +95,7 @@ public class TransactionDispatcher implements Runnable {
                 TimerTaskTransaction task=new TimerTaskTransaction(transaction);
                 Timer timer=new Timer(true);
                 timer.schedule(task,transactionDelay*1000);
-                System.out.println("Transaction scheduled");
+                //System.out.println("Transaction scheduled");
             }
 
 
@@ -102,7 +103,11 @@ public class TransactionDispatcher implements Runnable {
 
 
             Random rand=new Random();
-            int delay=rand.nextInt()% transactionIntervalMin +(transactionIntervalMax-transactionIntervalMin)+1;
+            int delay=rand.nextInt(Integer.MAX_VALUE-1)% transactionIntervalMin +(transactionIntervalMax-transactionIntervalMin)+1;
+            if(delay<0){
+                System.out.println("negative delay "+delay);
+                delay=10;
+            }
             try {
                 synchronized (this){
                     this.wait(delay*1000);
@@ -140,9 +145,9 @@ public class TransactionDispatcher implements Runnable {
 
         int valueGenerated=rand.nextInt(Integer.MAX_VALUE);///random number
         int succursaleTotransfer= (valueGenerated %succursaleNumber)+1;//trouve quel succursale de la liste on veut
-        System.out.println("succNBr " + succursaleNumber+" val"+ valueGenerated);
+  //      System.out.println("succNBr " + succursaleNumber+" val"+ valueGenerated);
 
-        System.out.println("creating new transaction to "+succursaleTotransfer +" in the list" );
+     //   System.out.println("creating new transaction to "+succursaleTotransfer +" in the list" );
 
         Iterator it = listeSuccursale.entrySet().iterator();
         SuccursaleClient succursaleChoisie=null;
@@ -152,8 +157,8 @@ public class TransactionDispatcher implements Runnable {
             if(index==succursaleTotransfer){
 
                 succursaleChoisie=(SuccursaleClient) pair.getValue();
-                System.out.println("creating new transaction to"+succursaleChoisie.getId() );
-                System.out.println("max amount possible is "+ ActiveSuccursale.getInstance().getThisSuccrusale().getMontant() );
+               // System.out.println("creating new transaction to"+succursaleChoisie.getId() );
+                //System.out.println("max amount possible is "+ ActiveSuccursale.getInstance().getThisSuccrusale().getMontant() );
 
             }
             index++;
@@ -223,10 +228,32 @@ public class TransactionDispatcher implements Runnable {
          */
         @Override
         public void run() {
-         //   System.out.println("tasked wakeup");
+            System.out.println("Envoie de "+transactionTocomplete.getMontant());
             SuccursaleClient succursaleTotransfer= ActiveSuccursale.getInstance().getListeSuccursale().get(transactionTocomplete.getIdTo());
             succursaleTotransfer.getConnectionThread().sendMessage(transactionTocomplete);
             mapTransaction.remove(transactionTocomplete.getUUID());
+
+
+            Iterator mapPIterator =mapTransaction.entrySet().iterator();
+
+            System.out.println(mapTransaction.size()+" transaction enlevé "+transactionTocomplete.getMontant() );
+
+
+            while (mapPIterator.hasNext()) {
+
+                Map.Entry pair = (Map.Entry) mapPIterator.next();
+                Transaction currentTransaction = (Transaction) pair.getValue();
+
+                    System.out.println("Transaction in  canal de  " +currentTransaction.getMontant());
+
+
+
+
+            }
+
+
+
+
 
         }
 

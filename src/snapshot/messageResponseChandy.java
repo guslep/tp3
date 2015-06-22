@@ -29,6 +29,7 @@ public class messageResponseChandy extends Message implements Serializable{
         idSuccursale=thisSuccursale.getId();
         montant=thisSuccursale.getMontant();
         transactionEnAttente= ActiveSuccursale.getInstance().getTransactionDispatcher().getMapTransaction();
+        System.out.println("nb transac "+transactionEnAttente.size()+" montant "+montant+" id "+idSuccursale);
         succrusale=new Succursale(null,montant,thisSuccursale.getNom(),thisSuccursale.getPort());
         succrusale.setId(idSuccursale);
 

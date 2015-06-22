@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class AutoChandySnapshot implements Runnable{
 
-	private static final int MIN_SLEEP_TIMER = 15;
+	private static final int MIN_SLEEP_TIMER = 30;
 	private static final int MAX_SLEEP_TIMER = 45;
 	private static final int SECOND_TO_MILLISECOND = 1000;
 	private int sleepTimer=0;

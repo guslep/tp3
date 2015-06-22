@@ -28,6 +28,10 @@ public class ChandySnapshot extends Observable{
         id=java.util.UUID.randomUUID();
         envoieDemandeSnapshot();
 
+        addThisSuccursaleSnapshot(ActiveSuccursale.getInstance().getThisSuccrusale());
+        System.out.println(ActiveSuccursale.getInstance().getThisSuccrusale().getMontant()  );
+
+
 	}
 	
 	public int getMontantBanque() {
@@ -71,7 +75,7 @@ public class ChandySnapshot extends Observable{
     }
 
     private void envoieDemandeSnapshot(){
-        addThisSuccursaleSnapshot(ActiveSuccursale.getInstance().getThisSuccrusale());
+
         Message snapshotRequest=new messageRequestChandy("Snapshot Request",this.id.toString());
       HashMap listeSuccursale= ActiveSuccursale.getInstance().getListeSuccursale();
         Iterator iterateurSuccursale=listeSuccursale.entrySet().iterator();
@@ -85,7 +89,9 @@ public class ChandySnapshot extends Observable{
     }
 
     private void addThisSuccursaleSnapshot(Succursale succursale){
-        tableauSuccursale[succursale.getId()]=succursale;
+       Succursale dummySuccursale=new Succursale(succursale.getSuccursaleIPAdresse(),succursale.getMontant(),succursale.getNom(),succursale.getPort());
+        tableauSuccursale[succursale.getId()]=dummySuccursale;
+        System.out.println("Succursale money"+succursale.getMontant());
         creerCanaux(ActiveSuccursale.getInstance().getTransactionDispatcher().getMapTransaction());
 
 
@@ -97,6 +103,11 @@ public class ChandySnapshot extends Observable{
     private void creerCanaux( HashMap mapPendingTransaction){
 
         Iterator mapPIterator =mapPendingTransaction.entrySet().iterator();
+        System.out.println(mapPendingTransaction.size()+" creating canal for "+ id.toString());
+
+        System.out.println(mapPendingTransaction.size()+" transaction en attente");
+
+
         while (mapPIterator.hasNext()) {
 
             Map.Entry pair = (Map.Entry) mapPIterator.next();
@@ -107,13 +118,18 @@ public class ChandySnapshot extends Observable{
             String clef=Integer.toString(sender)+"-"+Integer.toString(to);
             if(listeCanal.get(clef)==null){
                 listeCanal.put(clef,new Canal(sender,to,currentTransaction.getMontant()));
+                System.out.println("Creating canal"+clef +" contenant " +currentTransaction.getMontant());
+                System.out.println("Canal " +clef +" contains "+listeCanal.get(clef).getMontant());
 
             }else{
                 listeCanal.get(clef).addMontant(currentTransaction.getMontant());
-
+                System.out.println("adding to " + clef + " contenant " + currentTransaction.getMontant());
+                System.out.println("Canal " +clef +" contains "+listeCanal.get(clef).getMontant());
             }
 
         }
+
+
 
     }
 
@@ -122,7 +138,7 @@ public class ChandySnapshot extends Observable{
 
 
     public void manageResponse(messageResponseChandy response){
-
+        System.out.println("Processing response for " + response.getIdSnapshot());
         tableauSuccursale[response.getSuccrusale().getId()]=response.getSuccrusale();
         creerCanaux(response.getTransactionEnAttente());
         int index=1;
@@ -158,15 +174,15 @@ public class ChandySnapshot extends Observable{
     	
     	while (canauxIterator.hasNext()){
     		Map.Entry pair = (Map.Entry) canauxIterator.next();
-    		System.out.print("Canal S" + pair.getKey().toString());
+    		System.out.print("Canal " + pair.getKey().toString());
     		System.out.println(": " + ((Canal)pair.getValue()).getMontant() + "$");
     		
     		montantTotalSnapshot += ((Canal)pair.getValue()).getMontant();
     	}
     	if (montantTotalSnapshot == this.montantBanque){
-    		System.out.println("�TAT GLOBAL COH�RENT");
+    		System.out.println("ETAT GLOBAL COHERENT");
     	} else{
-    		System.out.println("�TAT GLOBAL INCOH�RENT");
+    		System.out.println("ETAT GLOBAL INCOHERENT");
     	}
 
         System.out.println(this.montantBanque);
