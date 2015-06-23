@@ -12,8 +12,8 @@ import java.util.*;
 public class TransactionDispatcher implements Runnable {
 
     private int transactionDelay=10;
-    private int transactionIntervalMin =10;
-    private int transactionIntervalMax =15;
+    private int transactionIntervalMin =5;
+    private int transactionIntervalMax =10;
 
     /**
      *
