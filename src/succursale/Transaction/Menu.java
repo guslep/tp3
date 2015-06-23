@@ -39,8 +39,10 @@ Intercept les inputs du client
                         executeTransfer(command);
                     }
                    else if (action[0].equals("snapshot")) {
+                       ActiveSuccursale.getInstance().getChandyManager().creerSnapShot();
 
                    } else if (action[0].equals("erreur")) {
+                       executeError(command);
 
                    }
                    else {
@@ -111,5 +113,27 @@ Intercept les inputs du client
         System.out.println("Paramètre");
         System.out.println("--m montant ");
         System.out.println("--s id de la succursale");
+        System.out.println("snapshot");
+        System.out.println("Commence un nouveau snapshot");
+        System.out.println("erreur");
+        System.out.println("Introduit une erreur dans le systeme");
+        System.out.println("Paramètre");
+        System.out.println("--m montant ");
+
+
+
+    }
+
+    private void executeError(String commande){
+        String leftTrimM[]=commande.split("--m ");
+        if(leftTrimM[1]!=null||leftTrimM[1]!=""){
+            int montantErreur =Integer.parseInt(leftTrimM[1]);
+            int montantAvant=ActiveSuccursale.getInstance().getThisSuccrusale().getMontant();
+            montantAvant-=montantErreur;
+            ActiveSuccursale.getInstance().getThisSuccrusale().setMontant(montantAvant);
+        }
+
+
+
     }
 }
