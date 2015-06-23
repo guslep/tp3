@@ -20,9 +20,6 @@ import java.util.TimerTask;
  */
 public class ResponseClientThread implements Runnable{
 
-
-
-
     ObjectOutputStream messageSender;
     Socket echoSocket = null;
 
@@ -41,14 +38,8 @@ public class ResponseClientThread implements Runnable{
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            System.out.println("id recu: " + message.getIdSuccursale());
-
-
              ActiveSuccursale.getInstance().getListeSuccursale().get(message.getIdSuccursale()).setConnectionThread(this);
               ActiveSuccursale.getInstance().printSuccursale();
-
-
-
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,7 +106,6 @@ public class ResponseClientThread implements Runnable{
 
                    messageRequestChandy received=(messageRequestChandy) messageReceived;
                    messageResponseChandy response=new messageResponseChandy(received.getIdSnapShot());
-                   System.out.println(response.getTransactionEnAttente().size() +" transaction avant 20 secondes de delai "+response.getSuccrusale().getMontant());
                    Iterator mapPIterator =response.getTransactionEnAttente().entrySet().iterator();
 
 
@@ -124,12 +114,6 @@ public class ResponseClientThread implements Runnable{
 
                        Map.Entry pair = (Map.Entry) mapPIterator.next();
                        Transaction currentTransaction = (Transaction) pair.getValue();
-
-                       System.out.println("Transaction in  canal de  " +currentTransaction.getMontant());
-
-
-
-
                    }
 
 
@@ -138,18 +122,10 @@ public class ResponseClientThread implements Runnable{
                   timer.schedule(timerTask,20*1000);
                   // sendMessage(response);
 
-
-
-
                }else if(messageResponseChandy.class.isInstance(messageReceived)){
                    messageResponseChandy response=(messageResponseChandy)messageReceived;
                    ActiveSuccursale.getInstance().getChandyManager().dispatchChandyResponse(response);
-
-
-               }else{
-
                }
-
 
             }
         } catch (IOException e) {
@@ -172,11 +148,7 @@ public class ResponseClientThread implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
     private class TimerTaskSend extends TimerTask {
 
         Message chandyMessage;
@@ -185,7 +157,6 @@ public class ResponseClientThread implements Runnable{
         private TimerTaskSend( Message chandyMessage) {
 
             this.chandyMessage = chandyMessage;
-
         }
 
         /**
@@ -203,17 +174,7 @@ public class ResponseClientThread implements Runnable{
 
                 Map.Entry pair = (Map.Entry) mapPIterator.next();
                 Transaction currentTransaction = (Transaction) pair.getValue();
-
-                System.out.println("Transaction in  canal de  " +currentTransaction.getMontant());
-
-
-
-
             }
-
-            System.out.println("Sending response "+(test.getSuccrusale().getMontant()+" size "+test.getTransactionEnAttente().size()));
-
-
             sendMessage(chandyMessage);
 
         }

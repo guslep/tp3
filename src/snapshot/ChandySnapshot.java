@@ -29,9 +29,6 @@ public class ChandySnapshot extends Observable{
         envoieDemandeSnapshot();
 
         addThisSuccursaleSnapshot(ActiveSuccursale.getInstance().getThisSuccrusale());
-        System.out.println(ActiveSuccursale.getInstance().getThisSuccrusale().getMontant()  );
-
-
 	}
 	
 	public int getMontantBanque() {
@@ -91,7 +88,6 @@ public class ChandySnapshot extends Observable{
     private void addThisSuccursaleSnapshot(Succursale succursale){
        Succursale dummySuccursale=new Succursale(succursale.getSuccursaleIPAdresse(),succursale.getMontant(),succursale.getNom(),succursale.getPort());
         tableauSuccursale[succursale.getId()]=dummySuccursale;
-        System.out.println("Succursale money"+succursale.getMontant());
         creerCanaux(ActiveSuccursale.getInstance().getTransactionDispatcher().getMapTransaction());
 
 
@@ -103,11 +99,7 @@ public class ChandySnapshot extends Observable{
     private void creerCanaux( HashMap mapPendingTransaction){
 
         Iterator mapPIterator =mapPendingTransaction.entrySet().iterator();
-        System.out.println(mapPendingTransaction.size()+" creating canal for "+ id.toString());
-
-        System.out.println(mapPendingTransaction.size()+" transaction en attente");
-
-
+        
         while (mapPIterator.hasNext()) {
 
             Map.Entry pair = (Map.Entry) mapPIterator.next();
@@ -118,13 +110,8 @@ public class ChandySnapshot extends Observable{
             String clef=Integer.toString(sender)+"-"+Integer.toString(to);
             if(listeCanal.get(clef)==null){
                 listeCanal.put(clef,new Canal(sender,to,currentTransaction.getMontant()));
-                System.out.println("Creating canal"+clef +" contenant " +currentTransaction.getMontant());
-                System.out.println("Canal " +clef +" contains "+listeCanal.get(clef).getMontant());
-
             }else{
                 listeCanal.get(clef).addMontant(currentTransaction.getMontant());
-                System.out.println("adding to " + clef + " contenant " + currentTransaction.getMontant());
-                System.out.println("Canal " +clef +" contains "+listeCanal.get(clef).getMontant());
             }
 
         }

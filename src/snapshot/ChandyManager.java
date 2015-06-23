@@ -50,15 +50,7 @@ public class ChandyManager implements Observer {
         if(iHashSnapShot.get(response.getIdSnapshot())!=null){
 
             iHashSnapShot.get(response.getIdSnapshot()).manageResponse(response);
-            System.out.println("Good dispatch respons "+response.getIdSnapshot());
-
         }
-        else{
-
-            System.out.println("Error "+response.getIdSnapshot());
-        }
-
-
     }
 
 

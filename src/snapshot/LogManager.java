@@ -7,19 +7,19 @@ import java.io.IOException;
 
 public class LogManager {
 
+	private static String logPath = "logChandyLamport.txt";
 	private BufferedWriter out; 
 	private static LogManager instance = null;
-	private static final String logPath = "logChandyLamport.txt";
 	
 	protected LogManager (){
-		File fileTemp = new File(logPath);
+		File fileTemp = new File (this.logPath);
 		if (fileTemp.exists()){
 			fileTemp.delete();
 		}
 	}
 	
 	public static LogManager getInstance(){
-		if (instance == null){
+		if (instance==null){
 			instance = new LogManager();
 		}
 		return instance;
