@@ -228,7 +228,7 @@ public class TransactionDispatcher implements Runnable {
          */
         @Override
         public void run() {
-            System.out.println("Envoie de "+transactionTocomplete.getMontant());
+
             SuccursaleClient succursaleTotransfer= ActiveSuccursale.getInstance().getListeSuccursale().get(transactionTocomplete.getIdTo());
             succursaleTotransfer.getConnectionThread().sendMessage(transactionTocomplete);
             mapTransaction.remove(transactionTocomplete.getUUID());
@@ -236,7 +236,7 @@ public class TransactionDispatcher implements Runnable {
 
             Iterator mapPIterator =mapTransaction.entrySet().iterator();
 
-            System.out.println(mapTransaction.size()+" transaction enlevé "+transactionTocomplete.getMontant() );
+
 
 
             while (mapPIterator.hasNext()) {
@@ -244,7 +244,7 @@ public class TransactionDispatcher implements Runnable {
                 Map.Entry pair = (Map.Entry) mapPIterator.next();
                 Transaction currentTransaction = (Transaction) pair.getValue();
 
-                    System.out.println("Transaction in  canal de  " +currentTransaction.getMontant());
+
 
 
 

@@ -54,7 +54,7 @@ public class messageResponseChandy extends Message implements Serializable{
 
 
         transactionEnAttente= copyTransactionAttente;
-        System.out.println("nb transac "+transactionEnAttente.size()+" montant "+montant+" id "+idSuccursale);
+
         succrusale=new Succursale(null,montant,thisSuccursale.getNom(),thisSuccursale.getPort());
         succrusale.setId(idSuccursale);
 

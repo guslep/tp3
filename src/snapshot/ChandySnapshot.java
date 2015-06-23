@@ -166,13 +166,14 @@ public class ChandySnapshot extends Observable{
     		
     		montantTotalSnapshot += ((Canal)pair.getValue()).getMontant();
     	}
+        System.out.println("Montant total dans la banque : " +this.montantBanque);
+        System.out.println("Montant du snapshot : "+ montantTotalSnapshot);
     	if (montantTotalSnapshot == this.montantBanque){
     		System.out.println("ETAT GLOBAL COHERENT");
     	} else{
     		System.out.println("ETAT GLOBAL INCOHERENT");
     	}
 
-        System.out.println(this.montantBanque);
-        System.out.println(montantTotalSnapshot);
+
     }
 }
